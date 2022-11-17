@@ -1,29 +1,40 @@
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.concurrent.TimeUnit;
+/**
+ * Базовый класс для инициализации селенида
+ */
 
 public class Setup {
 
-    protected WebDriver driver;
-
-    @BeforeEach
+    /**
+     * Инициализация selenide с настройками
+     */
     public void setUp(){
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-        BasePage.setDriver(driver);
+        Configuration.browser = "chrome";
+        Configuration.driverManagerEnabled = true;
+        Configuration.browserSize = "1920x1080";
+        Configuration.headless = false;
     }
 
+    /**
+     * Выполнение метода перед каждым запуском тестов
+     */
+    @BeforeEach
+    public void init(){
+        setUp();
+    }
+
+    /**
+     * Выполнение метода после каждого закрытия тестов
+     */
     @AfterEach
     public void tearDown(){
-        driver.close();
-        driver.quit();
+        Selenide.closeWebDriver();
     }
 
 }
